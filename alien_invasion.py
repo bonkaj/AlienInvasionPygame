@@ -2,7 +2,7 @@ import sys
 from settings import Settings
 import pygame
 
-class AlientInvasion:
+class AlienInvasion:
     """Overall class to manage game assets and behavior."""
     def __init__(self):
         """Initialize the game, and create game resources."""
@@ -12,7 +12,7 @@ class AlientInvasion:
 
         self.screen = pygame.display.set_mode(
             (self.settings.screen_width, self.settings.screen_height))
-        pygame.display.set_caption("Alient Invasion")
+        pygame.display.set_caption("Alien Invasion")
 
     def run_game(self):
         """Start the main loop for the game"""
@@ -28,7 +28,7 @@ class AlientInvasion:
             # Make the most recently drawn screen:
             pygame.display.flip()
 
-if __name__ == '__main__'
+if __name__ == '__main__':
     # Make game instance, and run the game.
-    ai = AlientInvasion()
+    ai = AlienInvasion()
     ai.run_game()
