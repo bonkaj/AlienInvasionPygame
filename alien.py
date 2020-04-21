@@ -8,6 +8,7 @@ class Alien(Sprite):
         """Initialize the alien and its starting position."""
         super().__init__()
         self.screen = ai_game.screen
+        self.settings = ai_game.settings
 
         # Load the alien image and set its rect attribute.
         self.image = pygame.image.load('images/ufo-1535653_1280.bmp')
