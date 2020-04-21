@@ -1,5 +1,7 @@
 import sys
+from time import sleep
 from settings import Settings
+from game_stats import GameStats
 import pygame
 from ship import Ship
 from bullet import Bullet
@@ -30,6 +32,7 @@ class AlienInvasion:
             self._check_events()
             self.ship.update()
             self._update_bullets()
+            self._update_aliens()
             self.bullets.update()
 
             # Get rid of bullets that have disappeared.
@@ -85,6 +88,27 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+        self._check_bullet_alien_collisions()
+
+    def _check_bullet_alien_collisions(self):
+        """Respond to bullet alien collisions."""
+        # Remove any bullets and aliens that have collided.
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+
+        if not self.aliens:
+            # Destroy existing bullets and create new fleet.
+            self.bullets.empty()
+            self._create_fleet()
+
+    def _update_aliens(self):
+        """Update positions of all aliens in the fleet."""
+        self._check_fleet_edges()
+        self.aliens.update()
+
+        # Look for alien-ship collisions.
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            print("Ship hit!!!")
+
     def _create_fleet(self):
         """Create the fleet of aliens."""
         # Create na alien and find the number of aliens in a row.
@@ -113,6 +137,19 @@ class AlienInvasion:
         alien.rect.x = alien.x
         alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
+
+    def _check_fleet_edges(self):
+        """Respond appropriately if any aliens have reached an edge."""
+        for alien in self.aliens.sprites():
+            if alien.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """Drop entire fleet and change the fleet's direction."""
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.fleet_drop_speed
+        self.settings.fleet_direction *= -1
 
     def _update_screen(self):
         # Redraw the screen during each pass through the loop.
